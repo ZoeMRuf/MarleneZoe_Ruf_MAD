@@ -1,5 +1,6 @@
 package com.example.movieapp.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,19 +19,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.R
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
+import com.example.movieapp.ui.theme.MovieAppTheme
 
 @Composable
-fun HomeScreen (){
-   MovieList()
+fun HomeScreen(navController: NavController) {
+    MovieList()
 }
 
 @Composable
-fun MovieRow(movie: Movie){
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothing*/}){
     val padding = 10.dp
     val roundCorner = 15.dp
     var iconArrow = Icons.Default.KeyboardArrowUp
@@ -45,7 +48,8 @@ fun MovieRow(movie: Movie){
     Card(
         Modifier
             .fillMaxWidth()
-            .padding(padding),
+            .padding(padding)
+            .clickable { onItemClick(movie.id) },
         shape = RoundedCornerShape(roundCorner),
         elevation = 5.dp
     ) {
@@ -157,8 +161,11 @@ fun MovieList(movies: List<Movie> = getMovies()){
             }
         )
         LazyColumn () {
-            items(movies) {movies -> MovieRow(movies)}
+            items(movies) { movies ->
+                MovieRow(movies){ movieID ->
+                    Log.d("MovieRow", "Item was clicked: $movieID")
+                }
+            }
         }
     }
-
 }

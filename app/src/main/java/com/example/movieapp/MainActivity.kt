@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.movieapp.navigation.Navigation
 import com.example.movieapp.screens.HomeScreen
+import com.example.movieapp.screens.MovieList
 import com.example.movieapp.ui.theme.MovieAppTheme
 
 class MainActivity : ComponentActivity() {
