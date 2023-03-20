@@ -66,7 +66,7 @@ fun MovieRow(movie: Movie){
     var clickArrow by remember { mutableStateOf(false) }
     var clickFavorite by remember { mutableStateOf(false) }
 
-    // If conditions to change icons when clicked, clickArrow also shows/hides AnimatedVisibility
+    // If-Conditions to change icons when clicked, clickArrow also shows/hides AnimatedVisibility
     if (clickArrow){ iconArrow = Icons.Default.KeyboardArrowDown }
     if (clickFavorite){ iconFavorite = Icons.Default.Favorite }
 
