@@ -72,8 +72,8 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(movie.images[0]) // Why do we get a list of urls form getMovies() ???
-                        .crossfade(true) // Not sure what this line does ???
+                        .data(movie.images[0])
+                        .crossfade(true)
                         .build(),
                     placeholder = painterResource(R.drawable.wakanda_img),
                     contentDescription =  "Movie Poster",
