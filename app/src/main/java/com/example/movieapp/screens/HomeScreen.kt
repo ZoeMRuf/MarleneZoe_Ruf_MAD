@@ -20,16 +20,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.R
+import com.example.movieapp.Screen
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 import com.example.movieapp.ui.theme.MovieAppTheme
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    MovieList()
+    // A surface container using the 'background' color from the theme
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        MovieList(navController)
+    }
+
 }
 
 @Composable
@@ -127,7 +136,9 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
 }
 
 @Composable
-fun MovieList(movies: List<Movie> = getMovies()){
+fun MovieList(navController: NavController = rememberNavController(),
+              movies: List<Movie> = getMovies()){
+
     val dropDownIcon = Icons.Default.MoreVert
     var expanded by remember {
         mutableStateOf(false)
@@ -160,10 +171,10 @@ fun MovieList(movies: List<Movie> = getMovies()){
                 }
             }
         )
-        LazyColumn () {
+        LazyColumn (userScrollEnabled = true) {
             items(movies) { movies ->
-                MovieRow(movies){ movieID ->
-                    Log.d("MovieRow", "Item was clicked: $movieID")
+                MovieRow(movies){ movieId ->
+                    navController.navigate(Screen.Detail.route + "/$movieId")
                 }
             }
         }
