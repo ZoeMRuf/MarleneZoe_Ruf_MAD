@@ -5,7 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.movieapp.MovieList
+import com.example.movieapp.composables.MovieList
 
 @Composable
 fun HomeScreen(navController: NavController) {

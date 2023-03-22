@@ -1,4 +1,4 @@
-package com.example.movieapp
+package com.example.movieapp.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -24,6 +24,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.movieapp.R
+import com.example.movieapp.Screen
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
@@ -43,12 +45,50 @@ fun SimpleAppBar(title: String, navController: NavController){
     )
 }
 
+@Composable
+fun MovieImage(data: String, description: String){
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(data)
+            .crossfade(true)
+            .build(),
+        placeholder = painterResource(R.drawable.wakanda_img),
+        contentDescription =  description,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxSize()
+    )
+}
 
+@Composable
+fun ImageRow(images: List<String>, title: String){
+    Spacer(Modifier.size(10.dp))
+    Divider(thickness = 1.5.dp, color = Color.LightGray)
+    Text(text = title,
+        style = MaterialTheme.typography.h6,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    )
+    LazyRow(Modifier.fillMaxWidth()){
+        items(images) {
+            Card(
+                Modifier
+                    .width(250.dp) //???
+                    .height(300.dp) //???
+                    .padding(5.dp),
+                shape = RoundedCornerShape(3.dp)
+            ) {
+                MovieImage(data = it, description = "Image in ImageRow")
+            }
+        }
+    }
+}
 
 @Composable
 fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothing*/}){
     val padding = 10.dp
-    val roundCorner = 15.dp
+    val roundCorner = 10.dp
     var iconArrow = Icons.Default.KeyboardArrowUp
     var iconFavorite = Icons.Default.FavoriteBorder
     var clickArrow by remember { mutableStateOf(false) }
@@ -74,18 +114,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
                     .fillMaxWidth()
                     .height(150.dp)
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(movie.images[0])
-                        .crossfade(true)
-                        .build(),
-                    placeholder = painterResource(R.drawable.wakanda_img),
-                    contentDescription =  "Movie Poster",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(roundCorner, roundCorner))
-                )
+                MovieImage(data = movie.images[0], description = "Movie Poster")
                 Box(
                     Modifier
                         .fillMaxSize()
@@ -139,13 +168,8 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
     }
 }
 
-
-
 @Composable
-fun MovieList(navController: NavController = rememberNavController(),
-              movies: List<Movie> = getMovies()
-){
-
+fun MovieList(navController: NavController = rememberNavController(), movies: List<Movie> = getMovies()){
     val dropDownIcon = Icons.Default.MoreVert
     var expanded by remember {
         mutableStateOf(false)
@@ -184,43 +208,6 @@ fun MovieList(navController: NavController = rememberNavController(),
                 MovieRow(movies){ movieId ->
                     navController.navigate(Screen.Detail.route + "/$movieId")
                 }
-            }
-        }
-    }
-}
-
-
-
-@Composable
-fun ImageRow(images: List<String>, title: String){
-    Spacer(Modifier.size(10.dp))
-    Divider(thickness = 1.5.dp, color = Color.LightGray)
-    Text(text = title,
-        style = MaterialTheme.typography.h6,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-    )
-    LazyRow(Modifier.fillMaxWidth()){
-        items(images) {
-            Card(
-                Modifier
-                    .width(250.dp) //???
-                    .height(300.dp) //???
-                    .padding(5.dp),
-                shape = RoundedCornerShape(3.dp)
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(it)
-                        .crossfade(true)
-                        .build(),
-                    placeholder = painterResource(R.drawable.wakanda_img),
-                    contentDescription =  "Image in ImageRow",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
             }
         }
     }

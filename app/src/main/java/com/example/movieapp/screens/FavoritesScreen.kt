@@ -9,8 +9,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.movieapp.MovieRow
-import com.example.movieapp.SimpleAppBar
+import com.example.movieapp.composables.MovieRow
+import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
