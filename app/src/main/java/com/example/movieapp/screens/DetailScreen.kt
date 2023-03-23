@@ -1,6 +1,8 @@
 package com.example.movieapp.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,8 +22,10 @@ fun DetailScreen(navController: NavController, movieId: String?){
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        //Not Scrollable !!! -> LazyColum ???
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        ) {
             SimpleAppBar(title = movie.title, navController = navController)
             MovieRow(movie = movie){ /* On Click = Nothing */ }
             ImageRow(images = movie.images, title = "Movie Images" )

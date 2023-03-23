@@ -14,7 +14,6 @@ import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
-
 @Composable
 fun FavoritesScreen(navController: NavController){
     //Hardcode Favorite Movie List
