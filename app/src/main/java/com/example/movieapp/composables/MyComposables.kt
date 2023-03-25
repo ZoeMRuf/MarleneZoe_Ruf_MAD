@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -74,8 +73,8 @@ fun ImageRow(images: List<String>, title: String){
         items(images) {
             Card(
                 Modifier
-                    .width(250.dp) //???
-                    .height(300.dp) //???
+                    .width(400.dp) //???
+                    .height(250.dp) //???
                     .padding(5.dp),
                 shape = RoundedCornerShape(3.dp)
             ) {
