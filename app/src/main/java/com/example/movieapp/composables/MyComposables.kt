@@ -13,7 +13,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -85,24 +87,38 @@ fun ImageRow(images: List<String>, title: String){
 }
 
 @Composable
+fun ToggleIcon(icon: ImageVector,
+               toggleIcon: ImageVector,
+               tint: Color = Color.Black,
+               contentDescription: String = "Icon",
+               onIconClick: () -> Unit = {}){
+    var showIcon = icon
+    var clickIcon by remember { mutableStateOf(false) }
+    if (clickIcon){ showIcon = toggleIcon }
+    Icon(
+        modifier = Modifier
+            .clickable {
+                clickIcon = !clickIcon
+                onIconClick()
+            }
+            .size(35.dp),
+        contentDescription = contentDescription,
+        tint = tint,
+        imageVector = showIcon
+    )
+}
+
+@Composable
 fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothing*/}){
     val padding = 10.dp
-    val roundCorner = 10.dp
-    var iconArrow = Icons.Default.KeyboardArrowUp
-    var iconFavorite = Icons.Default.FavoriteBorder
-    var clickArrow by remember { mutableStateOf(false) }
-    var clickFavorite by remember { mutableStateOf(false) }
-
-    // If conditions to change icons when clicked, clickArrow also shows/hides AnimatedVisibility
-    if (clickArrow){ iconArrow = Icons.Default.KeyboardArrowDown }
-    if (clickFavorite){ iconFavorite = Icons.Default.Favorite }
-
+    //State-Holders to show/hide AnimatedVisibility
+    var showDetails by remember { mutableStateOf(false) }
     Card(
         Modifier
             .fillMaxWidth()
             .padding(padding)
             .clickable { onItemClick(movie.id) },
-        shape = RoundedCornerShape(roundCorner),
+        shape = RoundedCornerShape(10.dp),
         elevation = 5.dp
     ) {
         Column(
@@ -120,14 +136,11 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
                         .padding(padding),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    Icon(
-                        contentDescription = "Add to favorites",
-                        imageVector = iconFavorite,
+                    ToggleIcon(
+                        icon = Icons.Default.FavoriteBorder,
+                        toggleIcon = Icons.Default.Favorite,
                         tint = MaterialTheme.colors.secondary,
-                        modifier = Modifier
-                            .clickable { clickFavorite = !clickFavorite }
-                            .size(35.dp)
-                    )
+                        contentDescription = "Add to Favorites"){}
                 }
             }
             Spacer(Modifier.size(padding))
@@ -138,24 +151,24 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(text = movie.title, style = MaterialTheme.typography.h6)
-                Icon(
-                    modifier = Modifier
-                        .clickable { clickArrow = !clickArrow }
-                        .size(35.dp),
-                    contentDescription = "Show details",
-                    imageVector = iconArrow
-                )
+                ToggleIcon(
+                    icon = Icons.Default.KeyboardArrowUp,
+                    toggleIcon = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Show Details"){
+                    showDetails = !showDetails
+                }
             }
-            AnimatedVisibility(visible = clickArrow) {
+            AnimatedVisibility(visible = showDetails){
                 Column(
                     Modifier
                         .fillMaxWidth()
                         .padding(padding)) {
-                    Text(text = "Director: ${movie.director}", style = MaterialTheme.typography.body1)
-                    Text(text = "Released: ${movie.year}", style = MaterialTheme.typography.body1)
-                    Text(text = "Genre: ${movie.genre}", style = MaterialTheme.typography.body1)
-                    Text(text = "Actors: ${movie.actors}", style = MaterialTheme.typography.body1)
-                    Text(text = "Rating: ${movie.rating}", style = MaterialTheme.typography.body1)
+                    Text(style = MaterialTheme.typography.body1,
+                        text = "Director: ${movie.director} \n" +
+                                "Released: ${movie.year} \n" +
+                                "Genre: ${movie.genre} \n" +
+                                "Actors: ${movie.actors} \n" +
+                                "Rating: ${movie.rating}")
                     Spacer(Modifier.size(padding))
                     Divider(thickness = 1.5.dp, color = Color.LightGray)
                     Spacer(Modifier.size(padding))
@@ -169,24 +182,21 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
 
 @Composable
 fun MovieList(navController: NavController = rememberNavController(), movies: List<Movie> = getMovies()){
-    val dropDownIcon = Icons.Default.MoreVert
-    var expanded by remember {
-        mutableStateOf(false)
-    }
+    var expandedMenu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth()) {
         TopAppBar(
             title = { Text(text = "Movies") },
             actions = {
                 Icon(
                     modifier = Modifier
-                        .clickable { expanded = !expanded }
+                        .clickable { expandedMenu = !expandedMenu }
                         .size(35.dp),
                     contentDescription = "More Options",
-                    imageVector = dropDownIcon
+                    imageVector = Icons.Default.MoreVert
                 )
                 DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false}) {
+                    expanded = expandedMenu,
+                    onDismissRequest = { expandedMenu = false}) {
                     DropdownMenuItem(onClick = {
                         // -> When "Favourites" is Clicked
                         navController.navigate(Screen.Favorites.route)
