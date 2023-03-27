@@ -106,10 +106,11 @@ fun ToggleIcon(icon: ImageVector,
 }
 
 @Composable
-fun MovieRow(movie: Movie, onFavoriteClick: () -> Unit = {}, onMovieRowClick: (String) -> Unit = {}){
+fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (String) -> Unit = {}){
     val padding = 10.dp
-    //State-Holders to show/hide AnimatedVisibility
-    var showDetails by remember { mutableStateOf(false) }
+    // State-Holder for show/hide Details
+    var clickArrowIcon by remember { mutableStateOf(false) }
+
     Card(
         Modifier
             .fillMaxWidth()
@@ -133,13 +134,16 @@ fun MovieRow(movie: Movie, onFavoriteClick: () -> Unit = {}, onMovieRowClick: (S
                         .padding(padding),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    ToggleIcon(
-                        icon = Icons.Default.FavoriteBorder,
-                        toggleIcon = Icons.Default.Favorite,
+                    var favoriteIcon = Icons.Default.FavoriteBorder
+                    if (movie.isFavorite){ favoriteIcon = Icons.Default.Favorite }
+                    Icon(
+                        modifier = Modifier
+                            .clickable { onFavoriteClick(movie) }
+                            .size(35.dp),
+                        contentDescription = "Add to Favorites",
                         tint = MaterialTheme.colors.secondary,
-                        contentDescription = "Add to Favorites"){
-                        onFavoriteClick()
-                    }
+                        imageVector = favoriteIcon
+                    )
                 }
             }
             Spacer(Modifier.size(padding))
@@ -150,14 +154,20 @@ fun MovieRow(movie: Movie, onFavoriteClick: () -> Unit = {}, onMovieRowClick: (S
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(text = movie.title, style = MaterialTheme.typography.h6)
-                ToggleIcon(
-                    icon = Icons.Default.KeyboardArrowUp,
-                    toggleIcon = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Show Details"){
-                    showDetails = !showDetails
-                }
+                var arrowIcon = Icons.Default.KeyboardArrowUp
+                if (clickArrowIcon){ arrowIcon = Icons.Default.KeyboardArrowDown }
+                Icon(
+                    modifier = Modifier
+                        .clickable {
+                            clickArrowIcon = !clickArrowIcon
+
+                        }
+                        .size(35.dp),
+                    contentDescription = "Show Details",
+                    imageVector = arrowIcon
+                )
             }
-            AnimatedVisibility(visible = showDetails){
+            AnimatedVisibility(visible = clickArrowIcon){
                 Column(
                     Modifier
                         .fillMaxWidth()
@@ -179,6 +189,8 @@ fun MovieRow(movie: Movie, onFavoriteClick: () -> Unit = {}, onMovieRowClick: (S
     }
 }
 
+
+/*
 @Composable
 fun MovieList(navController: NavController = rememberNavController(), movieViewModel: MovieViewModel){
     var expandedMenu by remember { mutableStateOf(false) }
@@ -239,9 +251,9 @@ fun MovieList(navController: NavController = rememberNavController(), movieViewM
                     movie = movie,
                     onMovieRowClick = { movieId ->
                     navController.navigate(Screen.Detail.route + "/$movieId")},
-                    onFavoriteClick = {/* TODO: Call movieViewModel toggle favorite state function */}
+                    onFavoriteClick = { movieViewModel.toggleIsFavorite(movie) }
                 )
             }
         }
     }
-}
+}*/

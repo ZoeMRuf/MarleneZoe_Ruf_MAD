@@ -12,13 +12,13 @@ import androidx.navigation.NavController
 import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
+import com.example.movieapp.models.Screen
 import com.example.movieapp.models.getMovies
 import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
 fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel){
-    //Hardcode Favorite Movie List
-    val favoriteMovies: List<Movie> = listOf(getMovies()[0],getMovies()[2],getMovies()[5],getMovies()[6])
+    val favoriteMovies: List<Movie> = movieViewModel.getFavoriteMovies()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -26,8 +26,15 @@ fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel
         Column(Modifier.fillMaxWidth()) {
             SimpleAppBar(title = "Favorites", navController = navController)
             LazyColumn (userScrollEnabled = true) {
-                items(favoriteMovies) { movies ->
-                    MovieRow(movies){/* On Click = Nothing */}
+                items(favoriteMovies) { movie ->
+                    MovieRow(
+                        movie = movie,
+                        onMovieRowClick = { movieId ->
+                            navController.navigate(Screen.Detail.route + "/$movieId")},
+                        onFavoriteClick = {
+                            movieViewModel.toggleIsFavorite(movie)
+                        }
+                    )
                 }
             }
         }
