@@ -23,7 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.movieapp.Screen
+import com.example.movieapp.models.Screen
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
