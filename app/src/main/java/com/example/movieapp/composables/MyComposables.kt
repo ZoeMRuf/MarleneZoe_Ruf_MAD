@@ -52,7 +52,7 @@ fun MovieImage(data: String, description: String){
             .data(data)
             .crossfade(true)
             .build(),
-        placeholder = painterResource(R.drawable.wakanda_img),
+        //placeholder = painterResource(R.drawable.wakanda_img),
         contentDescription =  description,
         contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()
