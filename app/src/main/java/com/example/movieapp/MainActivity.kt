@@ -16,7 +16,6 @@ class MainActivity : ComponentActivity() {
                 Navigation()
             }
         }
-        //Task 1
     }
 }
 

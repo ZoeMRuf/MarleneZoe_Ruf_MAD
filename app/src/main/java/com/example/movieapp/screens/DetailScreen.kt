@@ -17,8 +17,6 @@ import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, movieId: String?){
-    // Get a Movie out of List of Movies by its id
-    //val movie: Movie = movieViewModel.movieList.filter { it.id == movieId}[0]
     val movie: Movie = movieViewModel.getMovieById(movieId)
     Surface(
         modifier = Modifier.fillMaxSize(),

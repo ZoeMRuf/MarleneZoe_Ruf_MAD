@@ -84,28 +84,6 @@ fun ImageRow(images: List<String>, title: String){
 }
 
 @Composable
-fun ToggleIcon(icon: ImageVector,
-               toggleIcon: ImageVector,
-               tint: Color = Color.Black,
-               contentDescription: String = "Icon",
-               onIconClick: () -> Unit = {}){
-    var showIcon = icon
-    var clickIcon by remember { mutableStateOf(false) }
-    if (clickIcon){ showIcon = toggleIcon }
-    Icon(
-        modifier = Modifier
-            .clickable {
-                clickIcon = !clickIcon
-                onIconClick()
-            }
-            .size(35.dp),
-        contentDescription = contentDescription,
-        tint = tint,
-        imageVector = showIcon
-    )
-}
-
-@Composable
 fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (String) -> Unit = {}){
     val padding = 10.dp
     // State-Holder for show/hide Details
@@ -191,69 +169,60 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
 
 
 /*
-@Composable
-fun MovieList(navController: NavController = rememberNavController(), movieViewModel: MovieViewModel){
-    var expandedMenu by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth()) {
-        TopAppBar(
-            title = { Text(text = "Movies") },
-            actions = {
-                Icon(
-                    modifier = Modifier
-                        .clickable { expandedMenu = !expandedMenu }
-                        .size(35.dp),
-                    contentDescription = "More Options",
-                    imageVector = Icons.Default.MoreVert
-                )
-                DropdownMenu(
-                    expanded = expandedMenu,
-                    onDismissRequest = { expandedMenu = false}) {
+TODO: Ask Leon where to have MovieList
+Not good Practise to pass on the movieVieModel so I put the movieList into the home-screen ???
+ */
 
-                    //Start
-                    DropdownMenuItem(onClick = {
-                        navController.navigate(Screen.AddMovie.route) }) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Add Movie",
-                                modifier = Modifier.padding(4.dp)
-                            )
-                            Text(text = "Add Movie",
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .padding(4.dp)
-                            )
-                        }
+@Composable
+fun HomeAppBar( onDropDownEdit: () -> Unit, onDropDownFavorite: () -> Unit ){
+    var expandedMenu by remember { mutableStateOf(false) }
+    TopAppBar(
+        title = { Text(text = "Movies") },
+        actions = {
+            Icon(
+                modifier = Modifier
+                    .clickable { expandedMenu = !expandedMenu }
+                    .size(35.dp),
+                contentDescription = "More Options",
+                imageVector = Icons.Default.MoreVert
+            )
+            DropdownMenu(
+                expanded = expandedMenu,
+                onDismissRequest = { expandedMenu = false}) {
+                DropdownMenuItem(onClick = {
+                    onDropDownEdit()
+                }) {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Add Movie",
+                            modifier = Modifier.padding(4.dp)
+                        )
+                        Text(text = "Add Movie",
+                            modifier = Modifier
+                                .width(100.dp)
+                                .padding(4.dp)
+                        )
                     }
-                    //End
-                    DropdownMenuItem(onClick = {
-                        navController.navigate(Screen.Favorites.route) }) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = "Favorites",
-                                modifier = Modifier.padding(4.dp),
-                            )
-                            //Spacer(Modifier.size(10.dp))
-                            Text(text = "Favorites",
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .padding(4.dp)
-                            )
-                        }
+                }
+                DropdownMenuItem(onClick = {
+                    onDropDownFavorite()
+                }) {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Favorites",
+                            modifier = Modifier.padding(4.dp),
+                        )
+                        //Spacer(Modifier.size(10.dp))
+                        Text(text = "Favorites",
+                            modifier = Modifier
+                                .width(100.dp)
+                                .padding(4.dp)
+                        )
                     }
                 }
             }
-        )
-        LazyColumn (userScrollEnabled = true) {
-            items(movieViewModel.movieList) { movie ->
-                MovieRow(
-                    movie = movie,
-                    onMovieRowClick = { movieId ->
-                    navController.navigate(Screen.Detail.route + "/$movieId")},
-                    onFavoriteClick = { movieViewModel.toggleIsFavorite(movie) }
-                )
-            }
         }
-    }
-}*/
+    )
+}
