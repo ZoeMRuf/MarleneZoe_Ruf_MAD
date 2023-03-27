@@ -13,9 +13,10 @@ import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
+import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
-fun FavoritesScreen(navController: NavController){
+fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel){
     //Hardcode Favorite Movie List
     val favoriteMovies: List<Movie> = listOf(getMovies()[0],getMovies()[2],getMovies()[5],getMovies()[6])
     Surface(

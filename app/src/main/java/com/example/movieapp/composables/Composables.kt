@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.models.Screen
 import com.example.movieapp.models.Movie
-import com.example.movieapp.models.getMovies
+import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
 fun SimpleAppBar(title: String, navController: NavController){
@@ -106,7 +106,7 @@ fun ToggleIcon(icon: ImageVector,
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothing*/}){
+fun MovieRow(movie: Movie, onFavoriteClick: () -> Unit = {}, onMovieRowClick: (String) -> Unit = {}){
     val padding = 10.dp
     //State-Holders to show/hide AnimatedVisibility
     var showDetails by remember { mutableStateOf(false) }
@@ -114,7 +114,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
         Modifier
             .fillMaxWidth()
             .padding(padding)
-            .clickable { onItemClick(movie.id) },
+            .clickable { onMovieRowClick(movie.id) },
         shape = RoundedCornerShape(10.dp),
         elevation = 5.dp
     ) {
@@ -137,7 +137,9 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
                         icon = Icons.Default.FavoriteBorder,
                         toggleIcon = Icons.Default.Favorite,
                         tint = MaterialTheme.colors.secondary,
-                        contentDescription = "Add to Favorites"){}
+                        contentDescription = "Add to Favorites"){
+                        onFavoriteClick()
+                    }
                 }
             }
             Spacer(Modifier.size(padding))
@@ -178,7 +180,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {/*default = do nothi
 }
 
 @Composable
-fun MovieList(navController: NavController = rememberNavController(), movies: List<Movie> = getMovies()){
+fun MovieList(navController: NavController = rememberNavController(), movieViewModel: MovieViewModel){
     var expandedMenu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth()) {
         TopAppBar(
@@ -232,10 +234,13 @@ fun MovieList(navController: NavController = rememberNavController(), movies: Li
             }
         )
         LazyColumn (userScrollEnabled = true) {
-            items(movies) { movies ->
-                MovieRow(movies){ movieId ->
-                    navController.navigate(Screen.Detail.route + "/$movieId")
-                }
+            items(movieViewModel.movieList) { movie ->
+                MovieRow(
+                    movie = movie,
+                    onMovieRowClick = { movieId ->
+                    navController.navigate(Screen.Detail.route + "/$movieId")},
+                    onFavoriteClick = {/* TODO: Call movieViewModel toggle favorite state function */}
+                )
             }
         }
     }

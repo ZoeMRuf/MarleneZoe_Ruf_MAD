@@ -22,7 +22,10 @@ fun Navigation (){
         composable(
             route = Screen.Home.route
         ){
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                movieViewModel = movieViewModel
+            )
         }
 
         composable(
@@ -31,19 +34,29 @@ fun Navigation (){
                 type = NavType.StringType
             })
         ){ backStackEntry ->
-            DetailScreen(navController, movieId = backStackEntry.arguments?.getString("movieId"))
+            DetailScreen(
+                navController = navController,
+                movieViewModel = movieViewModel,
+                movieId = backStackEntry.arguments?.getString("movieId")
+            )
         }
 
         composable(
             route = Screen.Favorites.route
         ){
-            FavoritesScreen(navController = navController)
+            FavoritesScreen(
+                navController = navController,
+                movieViewModel = movieViewModel
+            )
         }
 
         composable(
             route = Screen.AddMovie.route
         ){
-            AddMovieScreen(navController = navController)
+            AddMovieScreen(
+                navController = navController,
+                movieViewModel = movieViewModel
+            )
         }
 
         //Screen.Home.route = "home_screen"

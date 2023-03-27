@@ -12,9 +12,10 @@ import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
+import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
-fun DetailScreen(navController: NavController, movieId: String?){
+fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, movieId: String?){
     // Get a Movie out of List of Movies by its id
     val movie: Movie = getMovies()[getMovies().indexOfFirst { it.id == movieId }]
 

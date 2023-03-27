@@ -19,10 +19,11 @@ import com.example.movieapp.models.Genre
 import com.example.movieapp.R
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.ListItemSelectable
+import com.example.movieapp.viewModels.MovieViewModel
 
 
 @Composable
-fun AddMovieScreen(navController: NavController){
+fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel){
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(

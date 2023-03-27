@@ -11,5 +11,9 @@ class MovieViewModel: ViewModel() {
 
     /*TODO: Implement the Logic
     -> isFavorite function that sets isFavorite to true
+    -> Toggle the isFavorite state of a movie
+
+    -> Get a list of all favorite movies
+    -> Get a list of all movies
      */
 }
