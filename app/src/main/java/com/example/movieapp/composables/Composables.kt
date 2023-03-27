@@ -17,14 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.movieapp.R
 import com.example.movieapp.Screen
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
@@ -196,17 +194,39 @@ fun MovieList(navController: NavController = rememberNavController(), movies: Li
                 DropdownMenu(
                     expanded = expandedMenu,
                     onDismissRequest = { expandedMenu = false}) {
+
+                    //Start
                     DropdownMenuItem(onClick = {
-                        // -> When "Favourites" is Clicked
-                        navController.navigate(Screen.Favorites.route)
-                    }) {
-                        Icon(
-                            modifier = Modifier.size(35.dp),
-                            contentDescription = "Favorites",
-                            imageVector = Icons.Default.Favorite
-                        )
-                        Spacer(Modifier.size(10.dp))
-                        Text(text = "Favorites")
+                        navController.navigate(Screen.AddMovie.route) }) {
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Add Movie",
+                                modifier = Modifier.padding(4.dp)
+                            )
+                            Text(text = "Add Movie",
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(4.dp)
+                            )
+                        }
+                    }
+                    //End
+                    DropdownMenuItem(onClick = {
+                        navController.navigate(Screen.Favorites.route) }) {
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Favorites",
+                                modifier = Modifier.padding(4.dp),
+                            )
+                            //Spacer(Modifier.size(10.dp))
+                            Text(text = "Favorites",
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(4.dp)
+                            )
+                        }
                     }
                 }
             }
