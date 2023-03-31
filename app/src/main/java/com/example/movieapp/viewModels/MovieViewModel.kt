@@ -1,6 +1,5 @@
 package com.example.movieapp.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.models.Movie
@@ -19,7 +18,6 @@ class MovieViewModel: ViewModel() {
     }
 
     fun toggleIsFavorite(movie: Movie){
-        _movieList.find { it.id == movie.id }?.let { movie -> movie.isFavorite = !movie.isFavorite }
-        Log.i("Message", "isFavorite = ${movie.isFavorite}")
+        _movieList.find { it.id == movie.id }?.let { movie.isFavorite = !movie.isFavorite }
     }
 }

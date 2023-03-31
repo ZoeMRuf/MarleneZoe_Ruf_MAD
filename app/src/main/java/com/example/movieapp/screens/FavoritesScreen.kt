@@ -13,7 +13,6 @@ import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.Screen
-import com.example.movieapp.models.getMovies
 import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
@@ -32,7 +31,7 @@ fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel
                         onMovieRowClick = { movieId ->
                             navController.navigate(Screen.Detail.route + "/$movieId")},
                         onFavoriteClick = {
-                            movieViewModel.toggleIsFavorite(movie)
+                            movieViewModel.toggleIsFavorite(it)
                         }
                     )
                 }
