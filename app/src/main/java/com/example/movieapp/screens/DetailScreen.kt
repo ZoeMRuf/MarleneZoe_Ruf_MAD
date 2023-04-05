@@ -30,7 +30,10 @@ fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, m
                     movieViewModel.toggleIsFavorite(it)
                 }
             )
-            ImageRow(images = movie.images, title = "Movie Images" )
+            movie.images?.let { ImageRow(images = it, title = "Movie Images" ) }
+            /* TODO: Not perfect because if image is null no movie row shown
+                    ImageRow(images = movie.images, title = "Movie Images" )
+            */
         }
     }
 }

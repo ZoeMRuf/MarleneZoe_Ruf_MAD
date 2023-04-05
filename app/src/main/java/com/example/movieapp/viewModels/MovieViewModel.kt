@@ -20,4 +20,16 @@ class MovieViewModel: ViewModel() {
     fun toggleIsFavorite(movie: Movie){
         _movieList.find { it.id == movie.id }?.let { movie.isFavorite = !movie.isFavorite }
     }
+
+    fun addMovie(movie: Movie){
+        _movieList.add(movie)
+    }
+
+    fun validationUserInput(input: String): Boolean{
+            return input.isEmpty()
+    }
+
+
 }
+
+

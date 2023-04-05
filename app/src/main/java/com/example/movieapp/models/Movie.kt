@@ -1,6 +1,5 @@
 package com.example.movieapp.models
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,9 +12,9 @@ class Movie(
     val director: String,
     val actors: String,
     val plot: String,
-    val images: List<String>,
+    val images: List<String>? = null, /* ? -> so images can be null */
     val rating: Float = 0F,
-    var initialIsFavorite: Boolean = false
+    initialIsFavorite: Boolean = false
     ){
     var isFavorite by mutableStateOf(initialIsFavorite)
 }

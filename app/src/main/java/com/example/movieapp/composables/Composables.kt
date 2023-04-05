@@ -15,13 +15,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.movieapp.R
 import com.example.movieapp.models.Movie
 
+
+@Composable
+fun ShowErrorMessage(msg: String, visible: Boolean){
+    AnimatedVisibility(visible = visible) {
+        Text(
+            text = "$msg is required. Please try again.",
+            color = Color.Red,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+    }
+}
 @Composable
 fun SimpleAppBar(title: String, navController: NavController){
     TopAppBar(
@@ -39,13 +53,15 @@ fun SimpleAppBar(title: String, navController: NavController){
 }
 
 @Composable
-fun MovieImage(data: String, description: String){
+fun MovieImage(data: String?, description: String){
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(data)
             .crossfade(true)
             .build(),
-        //placeholder = painterResource(R.drawable.wakanda_img),
+        placeholder = painterResource(R.drawable.no_image_found),
+        error = painterResource(R.drawable.no_image_found), /*if img request is unsuccessful*/
+        fallback = painterResource(R.drawable.no_image_found), /*if data is null*/
         contentDescription =  description,
         contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()
@@ -100,14 +116,13 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
                     .fillMaxWidth()
                     .height(150.dp)
             ) {
-                MovieImage(data = movie.images[0], description = "Movie Poster")
+                MovieImage(data = movie.images?.get(0), description = "Movie Poster")
                 Box(
                     Modifier
                         .fillMaxSize()
                         .padding(padding),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    /* TODO: Is the StateHolder injected from Outside??? */
                     var favoriteIcon = Icons.Default.FavoriteBorder
                     if (movie.isFavorite){ favoriteIcon = Icons.Default.Favorite }
                     Icon(
@@ -162,12 +177,6 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
         }
     }
 }
-
-
-/*
-TODO: Ask Leon where to have MovieList
-Not good Practise to pass on the movieVieModel so I put the movieList into the home-screen ???
- */
 
 @Composable
 fun HomeAppBar( onDropDownEdit: () -> Unit, onDropDownFavorite: () -> Unit ){

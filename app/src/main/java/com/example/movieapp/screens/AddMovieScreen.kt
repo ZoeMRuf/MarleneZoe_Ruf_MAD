@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieapp.models.Genre
 import com.example.movieapp.R
+import com.example.movieapp.composables.ShowErrorMessage
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.ListItemSelectable
+import com.example.movieapp.models.Movie
 import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
@@ -33,13 +35,21 @@ fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel)
                 navController = navController)
         },
     ) { padding ->
-        MainContent(Modifier.padding(padding))
+        MainContent(
+            Modifier.padding(padding),
+            onAddButtonClick = {addMovie -> movieViewModel.addMovie(addMovie)},
+            InputValidationCheck = {Input -> movieViewModel.validationUserInput(Input)}
+        )
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainContent(modifier: Modifier = Modifier) {
+fun MainContent(
+    modifier: Modifier = Modifier,
+    onAddButtonClick: (addMovie: Movie) -> Unit = {},
+    InputValidationCheck: (input: String) -> Boolean
+) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -53,13 +63,11 @@ fun MainContent(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.Start
         ) {
 
-            var title by remember {
-                mutableStateOf("")
-            }
+            var title by remember { mutableStateOf("") }
+            var titleError by remember { mutableStateOf(false) }
 
-            var year by remember {
-                mutableStateOf("")
-            }
+            var year by remember { mutableStateOf("") }
+            var yearError by remember { mutableStateOf(false) }
 
             val genres = Genre.values().toList()
 
@@ -74,43 +82,48 @@ fun MainContent(modifier: Modifier = Modifier) {
                 )
             }
 
-            var director by remember {
-                mutableStateOf("")
-            }
+            var director by remember { mutableStateOf("") }
+            var directorError by remember { mutableStateOf(false) }
 
-            var actors by remember {
-                mutableStateOf("")
-            }
+            var actors by remember { mutableStateOf("") }
+            var actorError by remember { mutableStateOf(false) }
 
-            var plot by remember {
-                mutableStateOf("")
-            }
+            var plot by remember { mutableStateOf("") }
+            var plotError by remember { mutableStateOf(false) }
 
-            var rating by remember {
-                mutableStateOf("")
-            }
+            var rating by remember { mutableStateOf("") }
+            var ratingError by remember { mutableStateOf(false) }
 
-            var isEnabledSaveButton by remember {
-                mutableStateOf(true)
-            }
+            var isEnabledSaveButton by remember { mutableStateOf(false) }
 
             OutlinedTextField(
                 value = title,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = { title = it },
+                onValueChange = {
+                    titleError = InputValidationCheck(it)
+                    title = it
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
+                },
                 label = { Text(text = stringResource(R.string.enter_movie_title)) },
-                isError = false
+                isError = titleError
             )
+            ShowErrorMessage(msg = "Title", visible = titleError)
+
 
             OutlinedTextField(
                 value = year,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = { year = it },
+                onValueChange = {
+                    yearError = InputValidationCheck(it)
+                    year = it
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
+                },
                 label = { Text(stringResource(R.string.enter_movie_year)) },
-                isError = false
+                isError = yearError
             )
+            ShowErrorMessage(msg = "Year", visible = yearError)
 
             Text(
                 modifier = Modifier.padding(top = 4.dp),
@@ -149,18 +162,28 @@ fun MainContent(modifier: Modifier = Modifier) {
                 value = director,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = { director = it },
+                onValueChange = {
+                    directorError = InputValidationCheck(it)
+                    director = it
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
+                },
                 label = { Text(stringResource(R.string.enter_director)) },
-                isError = false
+                isError = directorError
             )
+            ShowErrorMessage(msg = "Director", visible = directorError)
 
             OutlinedTextField(
                 value = actors,
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = { actors = it },
+                onValueChange = {
+                    actorError = InputValidationCheck(it)
+                    actors = it
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
+                },
                 label = { Text(stringResource(R.string.enter_actors)) },
-                isError = false
+                isError = actorError
             )
+            ShowErrorMessage(msg = "Actor", visible = actorError)
 
             OutlinedTextField(
                 value = plot,
@@ -168,31 +191,69 @@ fun MainContent(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
-                onValueChange = { plot = it },
+                onValueChange = {
+                    plotError = InputValidationCheck(it)
+                    plot = it
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
+                },
                 label = { Text(textAlign = TextAlign.Start, text = stringResource(R.string.enter_plot)) },
-                isError = false
+                isError = plotError
             )
+            ShowErrorMessage(msg = "Plot", visible = plotError)
 
             OutlinedTextField(
                 value = rating,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
+                    ratingError = InputValidationCheck(it)
                     rating = if(it.startsWith("0")) {
                         ""
                     } else {
                         it
                     }
+                    isEnabledSaveButton = enableButton(titleError, yearError, directorError, actorError, plotError, ratingError)
                 },
                 label = { Text(stringResource(R.string.enter_rating)) },
-                isError = false
+                isError = ratingError
+            )
+            ShowErrorMessage(msg = "Rating", visible = ratingError)
+
+            val movieToAdd = Movie(
+                id = "ID01", /* I don't no the ID yet so I use MockUp*/
+                title = title,
+                year = year,
+                genre = selectedGenres(genreItems),
+                director = director,
+                actors = actors,
+                plot = plot,
+                rating = if (rating.toFloatOrNull() != null) rating.toFloat() else 0.0f
             )
 
             Button(
                 enabled = isEnabledSaveButton,
-                onClick = { /*TODO add a new movie to the movie list*/ }) {
+                onClick = {
+                    onAddButtonClick(movieToAdd)
+                }) {
                 Text(text = stringResource(R.string.add))
             }
         }
     }
+}
+
+fun selectedGenres(genres: List<ListItemSelectable>): List<Genre>{
+    val selectedGenres: MutableList<Genre> = mutableListOf()
+    genres.forEach {
+        if (it.isSelected){
+          selectedGenres.add(enumValueOf(it.title))
+        }
+    }
+    return selectedGenres
+}
+
+fun enableButton(titleError:Boolean, yearError:Boolean, directorError:Boolean, actorError:Boolean, plotError:Boolean, ratingError:Boolean ): Boolean{
+    if (!titleError && !yearError && !directorError && !actorError && !plotError && !ratingError){
+        return true
+    }
+    return false
 }
