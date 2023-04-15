@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp' version "1.8.0-1.0.9"
 }
 
 android {
@@ -64,6 +65,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+
+    implementation("androidx.room:room-runtime:$room_version") // For "Room" -> local Database
+    ksp("androidx.room:room-compiler:$room_version") // To use Kotlin Symbol Processing (KSP)
+    implementation("androidx.room:room-ktx:$room_version") // optional - Kotlin Extensions and Coroutines support for Room
 }
 
 configurations.implementation {
