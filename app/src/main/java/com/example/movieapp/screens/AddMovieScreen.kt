@@ -220,14 +220,14 @@ fun MainContent(
             ShowErrorMessage(msg = "Rating", visible = ratingError)
 
             val movieToAdd = Movie(
-                id = "ID01", /* I don't no the ID yet so I use MockUp*/
+                id = "ID01", /* I don't know the ID yet so I used a MockUp*/
                 title = title,
                 year = year,
                 genre = selectedGenres(genreItems),
                 director = director,
                 actors = actors,
                 plot = plot,
-                rating = if (rating.toFloatOrNull() != null) rating.toFloat() else 0.0f
+                rating = if (rating.toFloatOrNull() != null && rating.toFloat() < 10.0) rating.toFloat() else 0.0f // Forgot < 10.0 check in LD_04
             )
 
             Button(
