@@ -12,10 +12,12 @@ import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.viewModels.MovieViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, movieId: String?){
-    val movie: Movie = movieViewModel.getMovieById(movieId)
+fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, movieId: Int?){
+    val coroutineScope = rememberCoroutineScope()
+    val movie: Movie = movieViewModel.getMovieById(movieId) //TODO: Fix coroutine Problem
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background) {
@@ -26,8 +28,11 @@ fun DetailScreen(navController: NavController, movieViewModel: MovieViewModel, m
             SimpleAppBar(title = movie.title, navController = navController)
             MovieRow(
                 movie = movie,
+                favorite = movie.isFavorite,
                 onFavoriteClick = {
-                    movieViewModel.toggleIsFavorite(it)
+                    coroutineScope.launch {
+                        movieViewModel.toggleIsFavorite(it)
+                    }
                 }
             )
             movie.images?.let { ImageRow(images = it, title = "Movie Images" ) }

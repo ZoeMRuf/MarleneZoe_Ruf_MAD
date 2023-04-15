@@ -22,10 +22,12 @@ import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.ListItemSelectable
 import com.example.movieapp.models.Movie
 import com.example.movieapp.viewModels.MovieViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel){
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -37,8 +39,11 @@ fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel)
     ) { padding ->
         MainContent(
             Modifier.padding(padding),
-            onAddButtonClick = {addMovie -> movieViewModel.addMovie(addMovie)},
-            InputValidationCheck = {Input -> movieViewModel.validationUserInput(Input)}
+            onAddButtonClick = {addMovie ->
+                coroutineScope.launch {
+                    movieViewModel.addMovie(addMovie)
+                } },
+            InputValidationCheck = {Input -> movieViewModel.validationUserInput(Input)} // No Coroutine because no Database access
         )
     }
 }
@@ -220,7 +225,7 @@ fun MainContent(
             ShowErrorMessage(msg = "Rating", visible = ratingError)
 
             val movieToAdd = Movie(
-                id = "ID01", /* I don't know the ID yet so I used a MockUp*/
+                //id = "ID01", /* I don't know the ID yet so I used a MockUp*/
                 title = title,
                 year = year,
                 genre = selectedGenres(genreItems),

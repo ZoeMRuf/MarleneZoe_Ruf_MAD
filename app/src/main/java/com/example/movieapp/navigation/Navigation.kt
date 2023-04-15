@@ -1,6 +1,7 @@
 package com.example.movieapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,12 +13,15 @@ import com.example.movieapp.screens.AddMovieScreen
 import com.example.movieapp.screens.DetailScreen
 import com.example.movieapp.screens.FavoritesScreen
 import com.example.movieapp.screens.HomeScreen
+import com.example.movieapp.utils.InjectorUtils
 import com.example.movieapp.viewModels.MovieViewModel
 
 @Composable
 fun Navigation (){
     val navController = rememberNavController()
-    val movieViewModel: MovieViewModel = viewModel()
+    val movieViewModel: MovieViewModel =
+        viewModel(factory= InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
+
     NavHost(navController = navController, startDestination = Screen.Home.route){
         composable(
             route = Screen.Home.route
@@ -37,7 +41,7 @@ fun Navigation (){
             DetailScreen(
                 navController = navController,
                 movieViewModel = movieViewModel,
-                movieId = backStackEntry.arguments?.getString("movieId")
+                movieId = backStackEntry.arguments?.getInt("movieId")  //getString("movieId")
             )
         }
 

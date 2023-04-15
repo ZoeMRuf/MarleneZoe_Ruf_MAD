@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieapp.composables.MovieRow
@@ -14,10 +15,12 @@ import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.Screen
 import com.example.movieapp.viewModels.MovieViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel){
-    val favoriteMovies: List<Movie> = movieViewModel.getFavoriteMovies()
+    val coroutineScope = rememberCoroutineScope()
+    val favoriteMovies: List<Movie> = movieViewModel.getFavoriteMovies() //TODO: fix coroutine problem
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -28,10 +31,13 @@ fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel
                 items(favoriteMovies) { movie ->
                     MovieRow(
                         movie = movie,
+                        favorite = movie.isFavorite,
                         onMovieRowClick = { movieId ->
                             navController.navigate(Screen.Detail.route + "/$movieId")},
                         onFavoriteClick = {
-                            movieViewModel.toggleIsFavorite(it)
+                            coroutineScope.launch {
+                                movieViewModel.toggleIsFavorite(it)
+                            }
                         }
                     )
                 }

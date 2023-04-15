@@ -10,11 +10,13 @@ import androidx.navigation.NavController
 import com.example.movieapp.composables.HomeAppBar
 import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.models.Screen
+import com.example.movieapp.models.getMovies
 import com.example.movieapp.viewModels.MovieViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController, movieViewModel: MovieViewModel) {
-    // A surface container using the 'background' color from the theme
+    val coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -25,12 +27,17 @@ fun HomeScreen(navController: NavController, movieViewModel: MovieViewModel) {
                 onDropDownFavorite = { navController.navigate(Screen.Favorites.route) }
             )
             LazyColumn (userScrollEnabled = true) {
-                items(movieViewModel.movieList) { movie ->
+                items(movieViewModel.movie.value) { movie ->
                     MovieRow(
                         movie = movie,
+                        favorite = movie.isFavorite,
                         onMovieRowClick = { movieId ->
                             navController.navigate(Screen.Detail.route + "/$movieId") },
-                        onFavoriteClick = { movieViewModel.toggleIsFavorite(it) }
+                        onFavoriteClick = {
+                            coroutineScope.launch {
+                                movieViewModel.toggleIsFavorite(it)
+                            }
+                        }
                     )
                 }
             }

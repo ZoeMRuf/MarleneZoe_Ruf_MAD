@@ -95,10 +95,11 @@ fun ImageRow(images: List<String>, title: String){
 }
 
 @Composable
-fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (String) -> Unit = {}){
+fun MovieRow(movie: Movie, favorite: Boolean, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (Int?) -> Unit = {}){
     val padding = 10.dp
-    // State-Holder for show/hide Details
+    // State-Holder for show/hide Details and Favorite Icon
     var clickArrowIcon by remember { mutableStateOf(false) }
+    var isFavorite by remember { mutableStateOf(favorite) }
 
     Card(
         Modifier
@@ -124,10 +125,13 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
                     contentAlignment = Alignment.TopEnd
                 ) {
                     var favoriteIcon = Icons.Default.FavoriteBorder
-                    if (movie.isFavorite){ favoriteIcon = Icons.Default.Favorite }
+                    if (isFavorite){ favoriteIcon = Icons.Default.Favorite }
                     Icon(
                         modifier = Modifier
-                            .clickable { onFavoriteClick(movie) }
+                            .clickable {
+                                isFavorite = !isFavorite
+                                onFavoriteClick(movie)
+                            }
                             .size(35.dp),
                         contentDescription = "Add to Favorites",
                         tint = MaterialTheme.colors.secondary,
