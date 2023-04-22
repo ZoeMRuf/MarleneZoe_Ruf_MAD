@@ -19,10 +19,10 @@ interface MovieDao {
     @Query("SELECT * from movie")
     fun readAll(): Flow<List<Movie>>
 
-    @Query("SELECT * from movie where isFavorite = 1")
+    @Query("SELECT * from movie WHERE isFavorite = 1")  //BIG FAIL: WHERE was in lower-case letters
     fun readFavorite(): Flow<List<Movie>>
 
-    @Query("Select * from movie where id = :movieId")
+    @Query("Select * from movie WHERE id = :movieId")
     fun getMovieById(movieId: Int): Movie
 
     @Query("DELETE from movie")

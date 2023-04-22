@@ -13,9 +13,9 @@ class DetailViewModel(private val repository: MovieRepository): ViewModel() {
 
     init {
         viewModelScope.launch {
-            repository.getAllMovies().collect{ movieList ->
-                if (!movieList.isNullOrEmpty()){
-                    _movie.value = movieList
+            repository.getAllMovies().collect{ value ->
+                if (!value.isNullOrEmpty()){
+                    _movie.value = value
                 }
             }
         }

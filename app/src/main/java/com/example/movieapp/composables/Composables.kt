@@ -95,11 +95,9 @@ fun ImageRow(images: List<String>, title: String){
 }
 
 @Composable
-fun MovieRow(movie: Movie, favorite: Boolean, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (Int?) -> Unit = {}){
+fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (Int?) -> Unit = {}){
     val padding = 10.dp
-    // State-Holder for show/hide Details and Favorite Icon
-    var clickArrowIcon by remember { mutableStateOf(false) }
-    var isFavorite by remember { mutableStateOf(favorite) }
+    var clickArrowIcon by remember { mutableStateOf(false) } // State-Holder for show/hide Details
 
     Card(
         Modifier
@@ -124,18 +122,19 @@ fun MovieRow(movie: Movie, favorite: Boolean, onFavoriteClick: (movie: Movie) ->
                         .padding(padding),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    var favoriteIcon = Icons.Default.FavoriteBorder
-                    if (isFavorite){ favoriteIcon = Icons.Default.Favorite }
                     Icon(
-                        modifier = Modifier
+                        tint = MaterialTheme.colors.secondary,
+                        imageVector =
+                        if (movie.isFavorite){
+                            Icons.Default.Favorite
+                        } else {
+                            Icons.Default.FavoriteBorder
+                        },
+                        contentDescription = "Add to Favorites",
+                        modifier = Modifier.size(35.dp)
                             .clickable {
-                                isFavorite = !isFavorite
                                 onFavoriteClick(movie)
                             }
-                            .size(35.dp),
-                        contentDescription = "Add to Favorites",
-                        tint = MaterialTheme.colors.secondary,
-                        imageVector = favoriteIcon
                     )
                 }
             }
@@ -147,17 +146,18 @@ fun MovieRow(movie: Movie, favorite: Boolean, onFavoriteClick: (movie: Movie) ->
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(text = movie.title, style = MaterialTheme.typography.h6)
-                var arrowIcon = Icons.Default.KeyboardArrowUp
-                if (clickArrowIcon){ arrowIcon = Icons.Default.KeyboardArrowDown }
                 Icon(
-                    modifier = Modifier
+                    modifier = Modifier.size(35.dp)
                         .clickable {
                             clickArrowIcon = !clickArrowIcon
-
-                        }
-                        .size(35.dp),
+                        },
                     contentDescription = "Show Details",
-                    imageVector = arrowIcon
+                    imageVector =
+                    if (clickArrowIcon){
+                        Icons.Default.KeyboardArrowDown
+                    } else {
+                        Icons.Default.KeyboardArrowUp
+                    }
                 )
             }
             AnimatedVisibility(visible = clickArrowIcon){

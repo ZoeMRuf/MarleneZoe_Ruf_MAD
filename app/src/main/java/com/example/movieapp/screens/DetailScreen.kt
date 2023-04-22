@@ -34,7 +34,6 @@ fun DetailScreen(navController: NavController, movieId: Int?){
             SimpleAppBar(title = movie.title, navController = navController)
             MovieRow(
                 movie = movie,
-                favorite = movie.isFavorite,
                 onFavoriteClick = {
                     coroutineScope.launch {
                         detailViewModel.toggleIsFavorite(it)

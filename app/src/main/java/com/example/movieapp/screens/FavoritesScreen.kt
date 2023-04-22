@@ -35,7 +35,6 @@ fun FavoritesScreen(navController: NavController){
                 items(favoriteMovieList) { movie ->
                     MovieRow(
                         movie = movie,
-                        favorite = movie.isFavorite,
                         onMovieRowClick = { movieId ->
                             navController.navigate(Screen.Detail.route + "/$movieId")},
                         onFavoriteClick = {

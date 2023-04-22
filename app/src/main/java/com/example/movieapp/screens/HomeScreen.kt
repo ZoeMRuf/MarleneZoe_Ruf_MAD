@@ -21,6 +21,7 @@ fun HomeScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val homeViewModel: HomeViewModel =
         viewModel(factory= InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
+    val allMovieList by homeViewModel.movie.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -32,10 +33,9 @@ fun HomeScreen(navController: NavController) {
                 onDropDownFavorite = { navController.navigate(Screen.Favorites.route) }
             )
             LazyColumn (userScrollEnabled = true) {
-                items(homeViewModel.movie.value) { movie ->
+                items(allMovieList) { movie ->
                     MovieRow(
                         movie = movie,
-                        favorite = movie.isFavorite,
                         onMovieRowClick = { movieId ->
                             navController.navigate(Screen.Detail.route + "/$movieId") },
                         onFavoriteClick = {

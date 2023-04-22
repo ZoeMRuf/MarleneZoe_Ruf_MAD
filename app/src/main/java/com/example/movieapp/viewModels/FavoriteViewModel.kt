@@ -15,8 +15,8 @@ class FavoriteViewModel(private val repository: MovieRepository): ViewModel() {
 
     init {
         viewModelScope.launch {
-            repository.getFavoriteMovies().collect{movieList ->
-                _movie.value = movieList
+            repository.getFavoriteMovies().collect{value ->
+                _movie.value = value
             }
         }
     }
