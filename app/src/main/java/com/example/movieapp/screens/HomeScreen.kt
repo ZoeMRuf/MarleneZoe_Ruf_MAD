@@ -6,17 +6,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieapp.composables.HomeAppBar
 import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.models.Screen
-import com.example.movieapp.models.getMovies
-import com.example.movieapp.viewModels.MovieViewModel
+import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.viewModels.HomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController, movieViewModel: MovieViewModel) {
+fun HomeScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
+    val homeViewModel: HomeViewModel =
+        viewModel(factory= InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -27,7 +32,7 @@ fun HomeScreen(navController: NavController, movieViewModel: MovieViewModel) {
                 onDropDownFavorite = { navController.navigate(Screen.Favorites.route) }
             )
             LazyColumn (userScrollEnabled = true) {
-                items(movieViewModel.movie.value) { movie ->
+                items(homeViewModel.movie.value) { movie ->
                     MovieRow(
                         movie = movie,
                         favorite = movie.isFavorite,
@@ -35,7 +40,7 @@ fun HomeScreen(navController: NavController, movieViewModel: MovieViewModel) {
                             navController.navigate(Screen.Detail.route + "/$movieId") },
                         onFavoriteClick = {
                             coroutineScope.launch {
-                                movieViewModel.toggleIsFavorite(it)
+                                homeViewModel.toggleIsFavorite(it)
                             }
                         }
                     )

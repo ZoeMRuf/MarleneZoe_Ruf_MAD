@@ -7,7 +7,7 @@ import com.example.movieapp.repositories.MovieRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class MovieViewModel(private val repository: MovieRepository): ViewModel() {
+class DetailViewModel(private val repository: MovieRepository): ViewModel() {
     private val _movie = MutableStateFlow(listOf<Movie>())
     val movie: StateFlow<List<Movie>> = _movie.asStateFlow()
 
@@ -33,42 +33,4 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
         movie.isFavorite = !movie.isFavorite
         repository.update(movie)
     }
-
-    suspend fun addMovie(movie: Movie){
-        repository.add(movie)
-    }
-
-    fun validationUserInput(input: String): Boolean{
-        return input.isEmpty()
-    }
-
-
 }
-
-/* Old ViewModel Functions:
-private val _movieList = getMovies().toMutableStateList()
-    val movieList: List<Movie>
-        get() = _movieList
-
-    fun getMovieById(movieId: Int?): Movie {
-        return _movieList.filter { it.id == movieId}[0]
-    }
-
-    fun getFavoriteMovies(): List<Movie> {
-        return _movieList.filter { it.isFavorite }
-    }
-
-    fun toggleIsFavorite(movie: Movie){
-        _movieList.find { it.id == movie.id }?.let { movie.isFavorite = !movie.isFavorite }
-    }
-
-    fun addMovie(movie: Movie){
-        _movieList.add(movie)
-    }
-
-    fun validationUserInput(input: String): Boolean{
-            return input.isEmpty()
-    }
- */
-
-

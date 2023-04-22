@@ -6,21 +6,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieapp.composables.MovieRow
 import com.example.movieapp.composables.SimpleAppBar
-import com.example.movieapp.models.Movie
 import com.example.movieapp.models.Screen
-import com.example.movieapp.viewModels.MovieViewModel
+import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.viewModels.FavoriteViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel){
+fun FavoritesScreen(navController: NavController){
     val coroutineScope = rememberCoroutineScope()
-    val favoriteMovies: List<Movie> = movieViewModel.getFavoriteMovies() //TODO: fix coroutine problem
+    val favoriteViewModel: FavoriteViewModel =
+        viewModel(factory = InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
+    val favoriteMovieList by favoriteViewModel.movie.collectAsState()
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -28,7 +32,7 @@ fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel
         Column(Modifier.fillMaxWidth()) {
             SimpleAppBar(title = "Favorites", navController = navController)
             LazyColumn (userScrollEnabled = true) {
-                items(favoriteMovies) { movie ->
+                items(favoriteMovieList) { movie ->
                     MovieRow(
                         movie = movie,
                         favorite = movie.isFavorite,
@@ -36,7 +40,7 @@ fun FavoritesScreen(navController: NavController, movieViewModel: MovieViewModel
                             navController.navigate(Screen.Detail.route + "/$movieId")},
                         onFavoriteClick = {
                             coroutineScope.launch {
-                                movieViewModel.toggleIsFavorite(it)
+                                favoriteViewModel.toggleIsFavorite(it)
                             }
                         }
                     )

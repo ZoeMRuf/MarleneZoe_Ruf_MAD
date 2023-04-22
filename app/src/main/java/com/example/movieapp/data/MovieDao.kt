@@ -4,9 +4,6 @@ import androidx.room.*
 import com.example.movieapp.models.Movie
 import kotlinx.coroutines.flow.Flow
 
-
-// TODO: Use Flows to return observable database results.
-
 @Dao
 interface MovieDao {
 
@@ -23,7 +20,7 @@ interface MovieDao {
     fun readAll(): Flow<List<Movie>>
 
     @Query("SELECT * from movie where isFavorite = 1")
-    fun readFavorite(): List<Movie>
+    fun readFavorite(): Flow<List<Movie>>
 
     @Query("Select * from movie where id = :movieId")
     fun getMovieById(movieId: Int): Movie

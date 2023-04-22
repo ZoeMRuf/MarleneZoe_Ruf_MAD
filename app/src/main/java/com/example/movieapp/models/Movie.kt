@@ -3,8 +3,6 @@ package com.example.movieapp.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// TODO: Note: you will have to write TypeConverters for genres and images. DONE???
-
 @Entity
 data class Movie(
     @PrimaryKey(autoGenerate = true) // TODO: id should be Int ????

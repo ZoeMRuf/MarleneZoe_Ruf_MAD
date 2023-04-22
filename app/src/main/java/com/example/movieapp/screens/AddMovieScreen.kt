@@ -10,10 +10,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieapp.models.Genre
 import com.example.movieapp.R
@@ -21,11 +23,16 @@ import com.example.movieapp.composables.ShowErrorMessage
 import com.example.movieapp.composables.SimpleAppBar
 import com.example.movieapp.models.ListItemSelectable
 import com.example.movieapp.models.Movie
-import com.example.movieapp.viewModels.MovieViewModel
+import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.viewModels.AddMovieViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel){
+fun AddMovieScreen(navController: NavController){
+
+    val addMovieViewModel: AddMovieViewModel =
+        viewModel(factory= InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
+
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -41,9 +48,9 @@ fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel)
             Modifier.padding(padding),
             onAddButtonClick = {addMovie ->
                 coroutineScope.launch {
-                    movieViewModel.addMovie(addMovie)
+                    addMovieViewModel.addMovie(addMovie)
                 } },
-            InputValidationCheck = {Input -> movieViewModel.validationUserInput(Input)} // No Coroutine because no Database access
+            InputValidationCheck = {Input -> addMovieViewModel.validationUserInput(Input)} // No Coroutine because no Database access
         )
     }
 }
