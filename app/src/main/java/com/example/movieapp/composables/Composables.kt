@@ -95,7 +95,7 @@ fun ImageRow(images: List<String>, title: String){
 }
 
 @Composable
-fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (Int?) -> Unit = {}){
+fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovieRowClick: (Int) -> Unit = {}){
     val padding = 10.dp
     var clickArrowIcon by remember { mutableStateOf(false) } // State-Holder for show/hide Details
 

@@ -23,7 +23,7 @@ interface MovieDao {
     fun readFavorite(): Flow<List<Movie>>
 
     @Query("Select * from movie WHERE id = :movieId")
-    fun getMovieById(movieId: Int): Movie
+    fun getMovieById(movieId: Int): Flow<Movie>
 
     @Query("DELETE from movie")
     fun deleteAll()

@@ -29,12 +29,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddMovieScreen(navController: NavController){
-
+    val coroutineScope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
     val addMovieViewModel: AddMovieViewModel =
         viewModel(factory= InjectorUtils.provideMovieViewModelFactory(LocalContext.current))
-
-    val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -232,7 +230,6 @@ fun MainContent(
             ShowErrorMessage(msg = "Rating", visible = ratingError)
 
             val movieToAdd = Movie(
-                //id = "ID01", /* I don't know the ID yet so I used a MockUp*/
                 title = title,
                 year = year,
                 genre = selectedGenres(genreItems),
