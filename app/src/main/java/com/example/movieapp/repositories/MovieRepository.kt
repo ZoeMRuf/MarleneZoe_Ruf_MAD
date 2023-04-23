@@ -15,7 +15,7 @@ class MovieRepository(private val movieDao: MovieDao) {
 
     fun getFavoriteMovies() = movieDao.readFavorite()
 
-    fun getMovieById(id: Int) = movieDao.getMovieById(id)
+    suspend fun getMovieById(id: Int) = movieDao.getMovieById(id)
 
     fun deleteAll() = movieDao.deleteAll()
 }

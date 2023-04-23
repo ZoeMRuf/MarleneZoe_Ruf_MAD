@@ -131,7 +131,8 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
                             Icons.Default.FavoriteBorder
                         },
                         contentDescription = "Add to Favorites",
-                        modifier = Modifier.size(35.dp)
+                        modifier = Modifier
+                            .size(35.dp)
                             .clickable {
                                 onFavoriteClick(movie)
                             }
@@ -147,7 +148,8 @@ fun MovieRow(movie: Movie, onFavoriteClick: (movie: Movie) -> Unit = {}, onMovie
             ) {
                 Text(text = movie.title, style = MaterialTheme.typography.h6)
                 Icon(
-                    modifier = Modifier.size(35.dp)
+                    modifier = Modifier
+                        .size(35.dp)
                         .clickable {
                             clickArrowIcon = !clickArrowIcon
                         },

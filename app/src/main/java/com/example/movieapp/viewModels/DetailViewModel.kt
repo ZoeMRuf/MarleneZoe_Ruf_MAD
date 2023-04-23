@@ -9,7 +9,7 @@ class DetailViewModel(private val repository: MovieRepository): ViewModel() {
 
     lateinit var movie: Flow<Movie>
 
-    fun getMovieById(movieId: Int): Flow<Movie> {
+    suspend fun getMovieById(movieId: Int): Movie {
         return repository.getMovieById(movieId)
     }
     

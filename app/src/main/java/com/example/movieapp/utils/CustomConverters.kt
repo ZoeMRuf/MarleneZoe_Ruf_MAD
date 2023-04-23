@@ -24,8 +24,16 @@ class CustomConverters {
 
     // for Type Conversion of Images
     @TypeConverter
-    fun formStringList(value: List<String>) = value.joinToString(",")
+    fun formStringList(value: List<String>): String {
+        return value.joinToString("#")
+    }
 
     @TypeConverter
-    fun toStringList(value: String) = value.split(",").map{ it.trim()}
+    fun toStringList(value: String): List<String> {
+        val returnValue = value.split("#").map{ it.trim()}
+        if (returnValue.last() == ""){
+            returnValue.dropLast(1)
+        }
+        return returnValue
+    }
 }
