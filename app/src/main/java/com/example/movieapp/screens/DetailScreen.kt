@@ -45,6 +45,7 @@ fun DetailScreen(navController: NavController, movieId: Int){
                 onFavoriteClick = {
                     coroutineScope.launch {
                         detailViewModel.toggleIsFavorite(detailMovie)
+                        detailMovie = detailViewModel.getMovieById(movieId) //BugFix for Favorite-Button
                     }
                 }
             )
